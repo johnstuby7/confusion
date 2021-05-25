@@ -33,7 +33,6 @@ class DishDetail extends Component {
     }
   }
 
-
   renderComments(comments){
     if (comments == null) {
       return (<div></div>);
@@ -46,6 +45,7 @@ class DishDetail extends Component {
             <p>{comment.comment}</p>
             <p>-- {comment.author},
             &nbsp;
+            // this formats the date value into a more readable format
             {new Intl.DateTimeFormat('en-US', {
               year: 'numeric',
               month: 'long',
