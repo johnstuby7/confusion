@@ -17,8 +17,9 @@ function RenderDish({dish}) {
 * Rendering the comments
 */
 function RenderComments({comments}) {
-  var commentList = comments.map(comment => {
+  const commentList = comments.map(comment => {
     return (
+      <div>
       <li key={comment.id} >
         {comment.comment}
         <br /><br />
@@ -31,6 +32,7 @@ function RenderComments({comments}) {
             }).format(new Date(comment.date))}
         <br /><br />
       </li>
+      </div>
     );
   });
 
