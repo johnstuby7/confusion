@@ -1,88 +1,66 @@
-import { Component } from 'react';
+import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
-class DishDetail extends Component {
-  constructor(props) {
-    super(props);
+function RenderDish({dish}) {
+  return (
+    <Card>
+      <CardImg width="100%" src={dish.image} alt={dish.name} />
+      <CardBody>
+        <CardTitle heading>{dish.name}</CardTitle>
+        <CardText>{dish.description}</CardText>
+      </CardBody>
+    </Card>
+  );
+}
 
-    this.state = {
-
-    };
-    console.log('Menu Component constructor is Invoked');
-  }
-
-  renderDish(dish) {
-    if(dish != null) {
-      return(
-        <div className="col-12 col-md-5 m-1">
-          <Card>
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
-            <CardBody>
-              <CardTitle heading>{dish.name}</CardTitle>
-              <CardText>{dish.description}</CardText>
-            </CardBody>
-          </Card>
-        </div>
-      )
-    }
-    else {
-      return(
-        //nothing will render on the screen
-        <div></div>
-      )
-    }
-  }
-
-  renderComments(comments){
-    if (comments == null) {
-      return (<div></div>);
-    }
-
-    const commentInfo = comments.map(comment => {
-      return (
-        <div key={comment.id}>
-          <li>
-            <p>{comment.comment}</p>
-            <p>-- {comment.author},
-            &nbsp;
-            // this formats the date value into a more readable format
-            {new Intl.DateTimeFormat('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: '2-digit'
-            }).format(new Date(comment.date))}
-            </p>
-          </li>
-        </div>
-      )
-    })
-    // Returns the above information formatted as below
+/*
+* Rendering the comments
+*/
+function RenderComments({comments}) {
+  var commentList = comments.map(comment => {
     return (
-      <div className='col-12 col-md-5 m-1'>
-        <h4> Comments </h4>
-        <ul className='list-unstyled'>
-          {commentInfo}
-        </ul>
-      </div>
-    )
-  }
+      <li key={comment.id} >
+        {comment.comment}
+        <br /><br />
+        -- {comment.author},
+        &nbsp;
+        {new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit'
+            }).format(new Date(comment.date))}
+        <br /><br />
+      </li>
+    );
+  });
 
-  //Used to Render the selectedDish view, returned in the menuComponent
-  render() {
-    const selectedDish = this.props.dish
+  return (
+    <div>
+      <h4>Comments</h4>
+      <ul className="list-unstyled">
+        {commentList}
+      </ul>
+    </div>
+  );
+}
 
-    if(selectedDish == null) {
-      return(<div></div>);
-    }
-
-    const dishInfo = this.renderDish(selectedDish);
-    const dishComment = this.renderComments(selectedDish.comments);
+const DishDetail = (props) => {
+  if (props.dish) {
     return (
       <div className="row">
-        {dishInfo}
-        {dishComment}
+        <div className="col-6 col-md-5 m-1">
+          <RenderDish dish={props.dish} />
+        </div>
+        <div className="col-6 col-md-5 m-1">
+          <RenderComments comments={props.dish.comments} />
+        </div>
       </div>
-    )
+    );
+  }
+  else {
+    return (
+      <div></div>
+    );
   }
 }
 
