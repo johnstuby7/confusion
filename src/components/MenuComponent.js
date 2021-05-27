@@ -1,13 +1,18 @@
 import React from 'react';
-import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
+import { Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
+// line 9: for each specific dish, the corresponding dish id value is evaluated here and substutited by the dish id
+// Ensure you use `` not ''
 function RenderMenuItem ({dish, onClick}) {
   return (
-    <Card onClick={() => onClick(dish.id)}>
-      <CardImg width="100%" src={dish.image} alt={dish.name} />
-      <CardImgOverlay>
+    <Card>
+      <Link to={`/menu/${dish.id}`}>
+        <CardImg width="100%" src={dish.image} alt={dish.name} />
+        <CardImgOverlay>
           <CardTitle>{dish.name}</CardTitle>
-      </CardImgOverlay>
+        </CardImgOverlay>
+      </Link>
     </Card>
   );
 }
@@ -16,13 +21,23 @@ const Menu = (props) => {
   const menu = props.dishes.map((dish) => {
     return (
       <div className="col-12 col-md-5 m-1"  key={dish.id}>
-        <RenderMenuItem dish={dish} onClick={props.onClick} />
+        <RenderMenuItem dish={dish} />
       </div>
     );
   });
 
   return (
     <div className="container">
+      <div className="row">
+        <Breadcrumb>
+          <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+          <BreadcrumbItem active>Menu</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12">
+          <h3>Menu</h3>
+          <hr />
+        </div>
+      </div>
       <div className="row">
         {menu}
       </div>
