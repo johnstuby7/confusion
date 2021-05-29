@@ -11,6 +11,7 @@ function RenderLeader({ leader }) {
         </Media>
         <Media body className="ml-5">
           <Media Heading> {leader.name}</Media>
+          <p dark style={{fontWeight:'200px',color:'grey'}}>{leader.designation}</p>
           <p> {leader.description} </p>
         </Media>
       </Media>
