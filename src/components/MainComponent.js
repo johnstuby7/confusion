@@ -8,6 +8,7 @@ import Footer from './FooterComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators'
 
 // Maps the redux state store to props to the main component.
 const mapStateToProps = state => {
@@ -18,6 +19,12 @@ const mapStateToProps = state => {
     leaders: state.leaders
   }
 }
+
+// Below will return the action object , then it is giving as a parameter to the dispatch function
+// then we add it to the connect at the bottom will become available to the main component
+const mapDispatchToProps = (dispatch) => ({
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+});
 
 class Main extends Component {
   constructor(props) {
@@ -36,10 +43,12 @@ class Main extends Component {
     }
 
     // ensures a match for dish and comments then returns the dishdetail object with that info
+    // addComment is now able to dispatch the change to the configurestore
     const DishWithId = ({match}) => {
       return(
         <DishDetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
           comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+          addComment={this.props.addComment}
         />
       );
     }
@@ -61,4 +70,5 @@ class Main extends Component {
   }
 }
 // this makes it so that the redux props are available to the main component
-export default withRouter(connect(mapStateToProps)(Main));
+// mapDispatchToProps makes it so that the addComment is now usuable within the main component
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
