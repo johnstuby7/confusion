@@ -8,7 +8,7 @@ import Footer from './FooterComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addComment } from '../redux/ActionCreators'
+import { addComment, fetchDishes } from '../redux/ActionCreators';
 
 // Maps the redux state store to props to the main component.
 const mapStateToProps = state => {
@@ -23,7 +23,8 @@ const mapStateToProps = state => {
 // Below will return the action object , then it is giving as a parameter to the dispatch function
 // then we add it to the connect at the bottom will become available to the main component
 const mapDispatchToProps = (dispatch) => ({
-    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+    fetchDishes: () => {dispatch(fetchDishes())}
 });
 
 class Main extends Component {
@@ -31,11 +32,18 @@ class Main extends Component {
     super(props);
   }
 
+  // Uses the above fetchDishes to grab dishes and load them into main
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
     const HomePage = () => {
       return(
         <Home
-          dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          dishesLoading={this.props.dishes.isLoading}
+          dishesErrMess={this.props.dishes.errMess}
           promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
           leader={this.props.leaders.filter((leader) => leader.featured)[0]}
         />
@@ -46,7 +54,9 @@ class Main extends Component {
     // addComment is now able to dispatch the change to the configurestore
     const DishWithId = ({match}) => {
       return(
-        <DishDetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+          isLoading={this.props.dishes.isLoading}
+          errMess={this.props.dishes.errMess}
           comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
           addComment={this.props.addComment}
         />
