@@ -24,7 +24,6 @@ class CommentForm extends Component {
 
     this.toggleCommentFormModal = this.toggleCommentFormModal.bind(this);
     this.handleCommentFormSubmit = this.handleCommentFormSubmit.bind(this);
-
   }
 
   handleCommentFormSubmit(values) {
@@ -44,7 +43,6 @@ class CommentForm extends Component {
         <Button outline onClick={this.toggleCommentFormModal}>
           <span className="fa fa-comments fa-lg"></span> Submit Comment
         </Button>
-
 
         <Modal isOpen={this.state.isCommentFormModalOpen}>
           <ModalHeader toggle={this.toggleCommentFormModal}>Submit Comment</ModalHeader>
@@ -107,7 +105,7 @@ class CommentForm extends Component {
                     rows="6"
                     className="form-control"
                     validators={{
-                        required
+                      required
                     }}
                   />
                   <Errors
@@ -148,7 +146,7 @@ function RenderDish({dish}) {
 }
 
 // <CommentForm dish={dish} comments={comments} this is what is making
-// the submit comment button show up
+// the comment form popup
 function RenderComments({dish,comments}){
   if (comments == null) {
     return (<div></div>)
