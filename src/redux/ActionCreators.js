@@ -1,6 +1,5 @@
 // Standardized way of importing all action types into action creator
 import * as ActionTypes from './ActionTypes';
-import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 
 // // payload is everything that needs to be to be carried by the action to the reducer
@@ -48,6 +47,51 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
     alert('Your comment could not be posted\nError: ' + error.message); });
 }
 
+export const postFeedback = (firstname, lastname, telnum, email, agree, contactType, message) => (dispatch) => {
+  const newFeedback = {
+    firstname: firstname,
+    lastname: lastname,
+    telnum: telnum,
+    email: email,
+    agree: agree,
+    contactType: contactType,
+    message: message,
+  }
+  newFeedback.date = new Date().toISOString();
+
+  return fetch(baseUrl + 'feedback', {
+    method: 'POST',
+    body: JSON.stringify(newFeedback),
+    headers: {
+        'Content-type': 'application/json'
+    },
+    credentials: 'same-origin'
+  })
+  .then(response => {
+      if (response.ok) {
+        return response;
+      }
+      else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText)
+        error.response = response;
+        throw error;
+      }
+    },
+    ////if no response from server
+    error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+    }
+  )
+  .then(response => response.json())
+  .then(response => alert(JSON.stringify(response)))
+  .catch(error => {
+    console.log('Post Comments', error.message);
+    alert('Comment could not be posted\nError' + error.message);
+  });
+}
+
+
 // pushes updated state of dish into store on change
 // Fetch returns localhost:3001/ and add dishes after the slash, once the dishes
 // are obtained, it will push the dishes into the redux store
@@ -91,6 +135,8 @@ export const addDishes = (dishes) => ({
   payload: dishes
 });
 
+
+
 export const fetchComments= () => (dispatch) => {
   return fetch(baseUrl + 'comments')
   .then(response => {
@@ -121,6 +167,8 @@ export const addComments = (comments) => ({
   type: ActionTypes.ADD_COMMENTS,
   payload: comments
 });
+
+
 
 export const fetchPromos = () => (dispatch) => {
   dispatch(promosLoading());
@@ -157,4 +205,43 @@ export const promosFailed = (errmess) => ({
 export const addPromos = (promos) => ({
   type: ActionTypes.ADD_PROMOS,
   payload: promos
+});
+
+
+
+export const fetchLeaders = () => (dispatch) => {
+  dispatch(leadersLoading());
+
+  return fetch(baseUrl + 'leaders')
+  .then(response => {
+    if (response.ok) {
+      return response;
+    }
+    else {
+      var error = new Error('Error' + response.status + ': ' + response.statusText)
+      error.response = response;
+      throw error;
+    }
+  },
+  error => {
+    var errmess = new Error(error.message);
+    throw errmess;
+  })
+    .then(response => response.json())
+    .then(leaders => dispatch(addLeaders(leaders)))
+    .catch(error => dispatch(leadersFailed(error.message)));
+}
+
+export const leadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING
+});
+
+export const leadersFailed = (errmess) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errmess
+});
+
+export const addLeaders = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders
 });
