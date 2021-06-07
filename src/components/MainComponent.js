@@ -36,10 +36,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   // Uses the above fetchDishes to grab dishes and load them into main
   componentDidMount() {
     this.props.fetchDishes();
@@ -64,16 +60,6 @@ class Main extends Component {
         />
       );
     }
-
-    const AboutUsPage = () => {
-      return(
-        <About
-          leaders={this.props.leaders.leaders}
-          leaderLoading={this.props.leaders.isLoading}
-          leaderErrMess={this.props.leaders.errMess}
-        />
-      );
-    };
 
     // ensures a match for dish and comments then returns the dishdetail object with that info
     // addComment is now able to dispatch the change to the configurestore
